@@ -1,4 +1,5 @@
-import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { isModelAttributeAuth } from "aws-amplify/datastore";
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -10,8 +11,9 @@ const schema = a.schema({
   Todo: a
     .model({
       content: a.string(),
+      isDone: a.boolean(),
     })
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [allow.owner()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -19,7 +21,7 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: 'iam',
+    defaultAuthorizationMode: "userPool",
   },
 });
 
